@@ -7,23 +7,31 @@ namespace TicketHub.Models
 	{
 		[Key]
 		[Column("ID")]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
+		[Required]
 		[Column("first_name")]
 		[StringLength(50)]
-		public string Name { get; set; }
+		public string FirstName { get; set; }
+		[Required]
 		[Column("last_name")]
 		[StringLength(50)]
-		public string Surname { get; set; }
+		public string LastName { get; set; }
+		[Required]
 		[Column("alias")]
 		[StringLength(30)]
 		public string Alias { get; set; }
+		[Required]
 		[Column("email")]
 		[StringLength(255)]
 		public string Email { get; set; }
+		[Required]
 		[Column("password")]
 		[StringLength(255)]
 		public string Password { get; set; }
 		[Column("is_admin")]
-		public bool isAdmin { get; set; }
+		public bool IsAdmin { get; set; }
+
+		public ICollection<PurchaseHistory> PurchaseHistories { get; set; }
 	}
 }
