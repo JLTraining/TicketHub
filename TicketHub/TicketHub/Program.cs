@@ -1,4 +1,9 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using TicketHub.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<TicketHubContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TicketHubContext") ?? throw new InvalidOperationException("Connection string 'TicketHubContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
