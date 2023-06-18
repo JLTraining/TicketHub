@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using TicketHub.Models;
 
 namespace TicketHub.Areas.Identity.Pages.Account
 {
@@ -70,6 +71,20 @@ namespace TicketHub.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
+            [Required]
+            [StringLength(50, ErrorMessage = "The alias field should have a maximum of 50 characters", MinimumLength = 2)]
+            [Display(Name = "Alias")]
+            public string Alias { get; set; }
+
+            [Required]
+            [StringLength(50, ErrorMessage = "The first name field should have a maximum of 50 characters", MinimumLength = 3)]
+            [Display(Name = "Firstname")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [StringLength(50, ErrorMessage = "The last name field should have a maximum of 50 characters", MinimumLength = 3)]
+            [Display(Name = "Lastname")]
+            public string LastName { get; set; }
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -112,11 +127,10 @@ namespace TicketHub.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = CreateUser();
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                var user = new ApplicationUser { Alias = Input.Alias, UserName = Input.Email, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName };
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
 
                 if (result.Succeeded)
                 {
