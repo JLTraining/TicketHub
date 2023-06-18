@@ -10,87 +10,94 @@ using TicketHub.Models;
 
 namespace TicketHub.Controllers
 {
-    public class UsersController : Controller
+    public class TicketsController : Controller
     {
         private readonly TicketHubContext _context;
 
-        public UsersController(TicketHubContext context)
+        public TicketsController(TicketHubContext context)
         {
             _context = context;
         }
 
-        // GET: Users
+        // GET: Tickets
         public async Task<IActionResult> Index()
         {
-              return _context.User != null ? 
-                          View(await _context.User.ToListAsync()) :
-                          Problem("Entity set 'TicketHubContext.User'  is null.");
+            var ticketHubContext = _context.Ticket.Include(t => t.Event).Include(t => t.Seller);
+            return View(await ticketHubContext.ToListAsync());
         }
 
-        // GET: Users/Details/5
+        // GET: Tickets/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.User == null)
+            if (id == null || _context.Ticket == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.User
+            var ticket = await _context.Ticket
+                .Include(t => t.Event)
+                .Include(t => t.Seller)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
+            if (ticket == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            return View(ticket);
         }
 
-        // GET: Users/Create
+        // GET: Tickets/Create
         public IActionResult Create()
         {
+            ViewData["EventId"] = new SelectList(_context.Event, "Id", "Title");
+            ViewData["SellerId"] = new SelectList(_context.User, "Id", "Alias");
             return View();
         }
 
-        // POST: Users/Create
+        // POST: Tickets/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Alias,Email,Password,IsAdmin")] User user)
+        public async Task<IActionResult> Create([Bind("Id,EventId,SellerId,Price,Quantity")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(user);
+                _context.Add(ticket);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            ViewData["EventId"] = new SelectList(_context.Event, "Id", "Title", ticket.EventId);
+            ViewData["SellerId"] = new SelectList(_context.User, "Id", "Alias", ticket.SellerId);
+            return View(ticket);
         }
 
-        // GET: Users/Edit/5
+        // GET: Tickets/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.User == null)
+            if (id == null || _context.Ticket == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.User.FindAsync(id);
-            if (user == null)
+            var ticket = await _context.Ticket.FindAsync(id);
+            if (ticket == null)
             {
                 return NotFound();
             }
-            return View(user);
+            ViewData["EventId"] = new SelectList(_context.Event, "Id", "Title", ticket.EventId);
+            ViewData["SellerId"] = new SelectList(_context.User, "Id", "Alias", ticket.SellerId);
+            return View(ticket);
         }
 
-        // POST: Users/Edit/5
+        // POST: Tickets/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Alias,Email,Password,IsAdmin")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,EventId,SellerId,Price,Quantity")] Ticket ticket)
         {
-            if (id != user.Id)
+            if (id != ticket.Id)
             {
                 return NotFound();
             }
@@ -99,12 +106,12 @@ namespace TicketHub.Controllers
             {
                 try
                 {
-                    _context.Update(user);
+                    _context.Update(ticket);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.Id))
+                    if (!TicketExists(ticket.Id))
                     {
                         return NotFound();
                     }
@@ -115,49 +122,53 @@ namespace TicketHub.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            ViewData["EventId"] = new SelectList(_context.Event, "Id", "Title", ticket.EventId);
+            ViewData["SellerId"] = new SelectList(_context.User, "Id", "Alias", ticket.SellerId);
+            return View(ticket);
         }
 
-        // GET: Users/Delete/5
+        // GET: Tickets/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.User == null)
+            if (id == null || _context.Ticket == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.User
+            var ticket = await _context.Ticket
+                .Include(t => t.Event)
+                .Include(t => t.Seller)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
+            if (ticket == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            return View(ticket);
         }
 
-        // POST: Users/Delete/5
+        // POST: Tickets/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.User == null)
+            if (_context.Ticket == null)
             {
-                return Problem("Entity set 'TicketHubContext.User'  is null.");
+                return Problem("Entity set 'TicketHubContext.Ticket'  is null.");
             }
-            var user = await _context.User.FindAsync(id);
-            if (user != null)
+            var ticket = await _context.Ticket.FindAsync(id);
+            if (ticket != null)
             {
-                _context.User.Remove(user);
+                _context.Ticket.Remove(ticket);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserExists(int id)
+        private bool TicketExists(int id)
         {
-          return (_context.User?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Ticket?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

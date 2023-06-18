@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TicketHub.Models
 {
-	public class User
+	public class User 
 	{
 		[Key]
 		[Column("ID")]
@@ -22,8 +23,8 @@ namespace TicketHub.Models
 		[StringLength(30)]
 		public string Alias { get; set; }
 		[Required]
-		[Column("email")]
-		[StringLength(255)]
+		[DataType(DataType.EmailAddress)]
+		[EmailAddress]
 		public string Email { get; set; }
 		[Required]
 		[Column("password")]
@@ -33,5 +34,6 @@ namespace TicketHub.Models
 		public bool IsAdmin { get; set; }
 
 		public ICollection<PurchaseHistory> PurchaseHistories { get; set; }
+		public ICollection<SaleHistory> SaleHistories { get; set; }
 	}
 }

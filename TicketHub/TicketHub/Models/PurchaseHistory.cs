@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 
 namespace TicketHub.Models
 {
@@ -26,5 +27,5 @@ namespace TicketHub.Models
 		[Required]
 		[Column ("price")]
 		public decimal Price { get; set; }
-	}
+		}
 }

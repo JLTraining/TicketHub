@@ -56,7 +56,7 @@ namespace TicketHub.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Date,Location,Description")] Event @event)
+        public async Task<IActionResult> Create([Bind("Id,Title,Date,Description")] Event @event)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace TicketHub.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Date,Location,Description")] Event @event)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Date,Description")] Event @event)
         {
             if (id != @event.Id)
             {
