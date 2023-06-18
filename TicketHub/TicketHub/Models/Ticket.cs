@@ -14,8 +14,8 @@ namespace TicketHub.Models
 		public Event Event { get; set; }
 		[Required]
 		[ForeignKey("User")]
-		public int SellerId { get; set; }
-		public User Seller { get; set; }
+		public string SellerId { get; set; }
+		public ApplicationUser Seller { get; set; }
 		[Required]
 		[Column("price")]
 		public decimal Price { get; set; }

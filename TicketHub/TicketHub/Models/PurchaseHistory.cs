@@ -1,20 +1,23 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace TicketHub.Models
 {
-	public class PurchaseHistory
+
+    public class PurchaseHistory
 	{
-		[Key]
+      
+        [Key]
 		[Column("ID")]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 
 		[Required]
 		[ForeignKey("User")]
-		public int UserId { get; set; }
-		public User User { get; set; }
+		public string UserId { get; set; }
+		public ApplicationUser User { get; set; }
 
 		[Required]
 		[ForeignKey("Ticket")]
