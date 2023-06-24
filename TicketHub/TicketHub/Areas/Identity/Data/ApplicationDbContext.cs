@@ -41,6 +41,10 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
         .HasForeignKey(p => p.UserId)
         .OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<Ticket>()
+            .HasIndex(e => new { e.Row, e.Seat })
+            .IsUnique();
+
     }
 
     public DbSet<TicketHub.Models.ApplicationUser> User { get; set; } = default!;

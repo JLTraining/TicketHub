@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using TicketHub.Areas.Identity.Data;
-using TicketHub.Models;
-using TicketHub.Areas.Identity.Data;
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -35,6 +33,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller=Home}/{action=Index}/{id?}");
-
+DatabaseInitializer.Seed(app);
 app.MapRazorPages();
 app.Run();

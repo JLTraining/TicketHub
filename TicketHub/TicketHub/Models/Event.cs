@@ -13,14 +13,14 @@ namespace TicketHub.Models
 		[Required]
 		[Column("title")]
 		[StringLength(50)]
-		public string Title { get; set; }
+		public string? Title { get; set; }
 		[Required]
 		[Column("date")]
 		public DateTime Date { get; set; }
 		[Column("description")]
 		[StringLength(255)]
-		public string Description { get; set; }
+		public string? Description { get; set; }
 
-		public ICollection<EventLocation> EventLocations { get; set; }
+		public ICollection<EventLocation>? EventLocations { get; set; }
 	}
 }

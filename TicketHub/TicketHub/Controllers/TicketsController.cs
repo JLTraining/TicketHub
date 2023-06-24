@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TicketHub.Areas.Identity.Data;
+using TicketHub.DataTransferObjects;
 using TicketHub.Models;
 
 namespace TicketHub.Controllers
@@ -59,7 +60,7 @@ namespace TicketHub.Controllers
         public IActionResult Create()
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
+            var model = new CreateTicket();
             // Query for only the Events that belong to the logged-in User
             var users = _context.User.Where(e => e.Id == userId);
 
@@ -75,7 +76,7 @@ namespace TicketHub.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,EventId,SellerId,Price,Quantity")] CreateTicket createTicket)
+        public IActionResult Create([Bind("Id,EventId,SellerId,Price,Quantity,Row,Seat")] CreateTicket createTicket)
         {
             /** Visur kur vajag, lai dabutu userId. **/
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -86,8 +87,13 @@ namespace TicketHub.Controllers
                     ticket.EventId = createTicket.EventId;
                     ticket.Price = createTicket.Price;
                     ticket.Quantity = createTicket.Quantity;
+                if (createTicket.Quantity == 1)
+                {
+                    ticket.Row = createTicket.Row;
+                    ticket.Seat = createTicket.Seat;
+                }
 
-                    _context.Add(ticket);
+                _context.Add(ticket);
                     _context.SaveChanges();
                     return RedirectToAction(nameof(Index));
              }
@@ -121,18 +127,22 @@ namespace TicketHub.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,EventId,SellerId,Price,Quantity")] EditTicket editTicket)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,EventId,SellerId,Price,Quantity, Row, Seat")] EditTicket editTicket)
         {
+            //Pārbauda vai datubāzē vispār ir kaut viena biļete
             if (_context.Ticket == null)
             {
                 return NotFound();
             }
 
+            //inicializē mainīgo', kas glabā konkrētas biļetes identifikatoru
             var ticket = _context.Ticket.Find(id);
+            //Ja šis identifikators netika atrasts ar _context.Ticket.Find(id), ticket ir bez vērtības
             if (ticket == null)
             {
                 return NotFound();
             }
+
 
             if (ModelState.IsValid)
             {
@@ -142,6 +152,8 @@ namespace TicketHub.Controllers
                     ticket.EventId = editTicket.EventId;
                     ticket.Price = editTicket.Price;
                     ticket.Quantity = editTicket.Quantity;
+                    ticket.Row = editTicket.Row;
+                    ticket.Seat = editTicket.Seat;
 
                     _context.Update(ticket);
                     await _context.SaveChangesAsync();

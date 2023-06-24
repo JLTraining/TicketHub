@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TicketHub.Areas.Identity.Data;
+using TicketHub.DataTransferObjects;
 using TicketHub.Models;
 
 namespace TicketHub.Controllers
 {
+    [Authorize]
     public class EventsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -56,15 +60,21 @@ namespace TicketHub.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Date,Description")] Event @event)
+        public IActionResult Create([Bind("Title,Date,Description")] CreateEvent createEvent)
         {
+            
+            var _event = new Event();
             if (ModelState.IsValid)
             {
-                _context.Add(@event);
-                await _context.SaveChangesAsync();
+                _event.Title = createEvent.Title;
+                _event.Date = createEvent.Date;
+                _event.Description = createEvent.Description;
+
+                _context.Add(_event);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            return View(@event);
+            return View(_event);
         }
 
         // GET: Events/Edit/5
