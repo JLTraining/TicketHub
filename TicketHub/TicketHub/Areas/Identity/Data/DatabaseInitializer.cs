@@ -139,7 +139,8 @@ namespace TicketHub.Areas.Identity.Data
                                     Price = GenerateRandomPrice(),
                                     Quantity = GenerateRandomQuantity(),
                                     Row = randomRow,
-                                    Seat = randomSeat
+                                    Seat = randomSeat,
+                                    isListed = true
                                 };
 
                                 RowSeatIndex.Add(randomRow + randomSeat);

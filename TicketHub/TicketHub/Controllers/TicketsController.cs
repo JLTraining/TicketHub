@@ -77,6 +77,15 @@ namespace TicketHub.Controllers
             /** Visur kur vajag, lai dabutu userId. **/
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var ticket = new Ticket();
+            //Check for duplicate Row and seat combinations in events with same title or id
+            var eventTitle = _context.Event.Where(e => e.Id == createTicket.EventId).Select(e => e.Title).FirstOrDefault();
+           // var existingTitle = _context.Event.FirstOrDefault(t => t.Title == eventTitle);
+            var existingTicket = _context.Ticket.FirstOrDefault(t => t.EventId == createTicket.EventId && t.Row == createTicket.Row && t.Seat == createTicket.Seat);
+
+            if (existingTicket != null )
+            {
+                ModelState.AddModelError("Seat", "A ticket with the same Row and Seat already exists.");
+            }
             if (ModelState.IsValid)
             {
                     ticket.SellerId = userId;
@@ -214,6 +223,58 @@ namespace TicketHub.Controllers
         private bool TicketExists(int id)
         {
             return (_context.Ticket?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+        //List ticket
+        // GET: Tickets/List/5
+        public IActionResult List(int? id)
+
+        {
+            var ticket = _context.Ticket
+            .Include(t => t.Event)
+            .FirstOrDefault(t => t.Id == id);
+
+
+            if (id == null || _context.Ticket == null)
+            {
+                return NotFound();
+            }
+
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+            return View(ticket);
+        }
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult List(int id)
+        {
+            var ticket  = _context.Ticket.Find(id);
+
+            if (ticket == null) 
+            { 
+                return NotFound(); 
+            }
+
+            else if(ModelState.IsValid)
+            {   if (ticket.isListed == false)
+                {
+                    ticket.isListed = true;
+                    _context.Update(ticket);
+                    _context.SaveChanges();
+                }
+                else if (ticket.isListed == true)
+                {
+                    ticket.isListed = false;
+                    _context.Update(ticket);
+                    _context.SaveChanges();
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            return View(ticket);
         }
     }
 }

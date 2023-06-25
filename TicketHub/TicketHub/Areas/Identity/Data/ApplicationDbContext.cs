@@ -49,6 +49,10 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
             .Property(e => e.Price)
             .HasColumnType("decimal(18,2)");
 
+        modelBuilder.Entity<Ticket>()
+            .Property(i => i.isListed)
+            .HasDefaultValue(false);
+
     }
 
     public DbSet<TicketHub.Models.ApplicationUser> User { get; set; } = default!;

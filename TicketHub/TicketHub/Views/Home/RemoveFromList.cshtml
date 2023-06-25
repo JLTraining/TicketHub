@@ -1,0 +1,12 @@
+﻿@model TicketHub.Models.Ticket
+
+@{
+    ViewData["Title"] = "RemoveFromList";
+}
+
+
+<p>Are you sure you want to remove the listing for @Model.Event.Title on @Model.Event.Date? The payment amount is @Model.Price.</p>
+<form method="post" asp-controller="Home" asp-action="RemoveFromList" asp-route-id="@Model.Id">
+    @* Form fields and submit button *@
+    <button type="submit">Remove Listing</button>
+</form>

@@ -1,0 +1,22 @@
+﻿@model TicketHub.Models.Ticket
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<h3>Listing Confirmation</h3>
+@if (@Model.isListed == false)
+{
+    <p>Are you sure you want to list @Model.Event.Title @Model.Event.Date for @Model.Price?</p>
+    <form method="post" asp-controller="Tickets" asp-action="List" asp-route-id="@Model.Id">
+        @* Form fields and submit button *@
+        <button type="submit">Confirm</button>
+    </form>
+} else if(@Model.isListed == true)
+{
+   <p>Are you sure you want to romove from list @Model.Event.Title @Model.Event.Date for @Model.Price?</p>
+   <form method="post" asp-controller="Tickets" asp-action="List" asp-route-id="@Model.Id">
+        @* Form fields and submit button *@
+        <button type="submit">Confirm</button>
+    </form>
+}

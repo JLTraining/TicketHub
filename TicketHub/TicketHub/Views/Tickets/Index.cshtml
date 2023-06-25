@@ -31,6 +31,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Seat)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.isListed)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -75,12 +78,26 @@
                 {
                         @Html.DisplayFor(modelItem => item.Seat)
                  }
+                 <td>
+                @Html.DisplayFor(modelItem => item.isListed)
+            </td>
             </td>
             <td></td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+
+            <td>
+                @if(item.isListed == false)
+                {
+               <td><a method="post" asp-controller="Tickets" asp-action="List" asp-route-id="@item.Id">List</a></td>
+                } else if(item.isListed == true)
+                {
+               <td><a method="post" asp-controller="Tickets" asp-action="List" asp-route-id="@item.Id">Remove from Listing</a></td>
+                }
+
             </td>
         </tr>
 }

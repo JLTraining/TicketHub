@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<TicketHub.Models.Ticket>
+@using System.Security.Claims
 
 @{
     ViewData["Title"] = "Index";
@@ -9,6 +10,98 @@
 <p>
     <a asp-controller="Tickets" asp-action="Create">Add Ticket</a>
 </p>
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Get))
+{
+    <div class="form-group">
+        <label for="sortOrder">Sort By:</label>
+        <select id="sortOrder" name="sortOrder" class="form-control">
+            <option value="TitleAsc">Event Title (A-Z)</option>
+            <option value="TitleDesc">Event Title (Z-A)</option>
+            <option value="PriceAsc">Price (Low to High)</option>
+            <option value="PriceDesc">Price (High to Low)</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Sort</button>
+    </div>
+}
+<h2>My Listings</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Event)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Seller)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Row)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Seat)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        { 
+            if (item.isListed == true && item.SellerId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+            {
+                <tr>
+                    <td>
+                        @if (item.Event != null)
+                        {
+                            @Html.DisplayFor(modelItem => item.Event.Title)
+                        }
+                        else
+                        {
+                            @:No event assigned
+                        }
+                    </td>
+                    <td>
+                        @if (item.Seller !=null)
+                        {
+                            @Html.DisplayFor(modelItem => item.Seller.Id)
+                        }
+                        else
+                        {
+                            @:No user assigned
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @if (item.Quantity == 1)
+                        {
+                            @Html.DisplayFor(modelItem => item.Row)
+                        }
+                    </td>
+                    <td>
+                        @if (item.Quantity == 1)
+                        {
+                            @Html.DisplayFor(modelItem => item.Seat)
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        <a method="post" asp-controller="Home" asp-action="RemoveFromList" asp-route-id="@item.Id">Remove from listing</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<h2>All Tickets</h2>
 <table class="table">
     <thead>
         <tr>
@@ -36,7 +129,9 @@
     </thead>
     <tbody>
         @foreach (var item in Model)
-        {
+        { 
+            @if(item.isListed == true && item.SellerId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+            {
             <tr>
                 <td>
                     @if (item.Event != null)
@@ -79,9 +174,18 @@
                         @Html.DisplayFor(modelItem => item.Price)
                 </td>
                 <td></td>
-                <td><a method="post"asp-controller="Home" asp-action="Order" asp-route-id="@item.Id">Order</a></td>
-
+                @{
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if(userId == @item.SellerId){
+                     <td><a method="post"asp-controller="Home" asp-action="RemoveFromList" asp-route-id="@item.Id">Remove from listing</a></td>
+                }
+                else if(userId!= @item.SellerId)
+                {
+                     <td><a method="post"asp-controller="Home" asp-action="Order" asp-route-id="@item.Id">Order</a></td>
+                }
+                }
             </tr>
+        }
         }
     </tbody>
 </table>
