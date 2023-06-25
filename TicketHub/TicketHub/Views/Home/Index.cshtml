@@ -23,6 +23,13 @@
         </select>
         <button type="submit" class="btn btn-primary">Sort</button>
     </div>
+     <div class="col-md-6">
+        <!--search bar -->
+        <label for="search">Search:</label>
+        <input type="text" id="search" name="search">
+        <!-- Search button -->
+        <button type="submit">Search</button>
+    </div>
 }
 <h2>My Listings</h2>
 <table class="table">
@@ -52,7 +59,7 @@
     <tbody>
         @foreach (var item in Model)
         { 
-            if (item.isListed == true && item.SellerId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+            if (item.isListed == true && item.SellerId == User.FindFirstValue(ClaimTypes.NameIdentifier))
             {
                 <tr>
                     <td>
@@ -130,7 +137,7 @@
     <tbody>
         @foreach (var item in Model)
         { 
-            @if(item.isListed == true && item.SellerId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+            @if(item.isListed == true && item.SellerId != User.FindFirstValue(ClaimTypes.NameIdentifier))
             {
             <tr>
                 <td>

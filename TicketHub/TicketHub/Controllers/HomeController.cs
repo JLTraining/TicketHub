@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Sockets;
 using System.Security.Claims;
+using Microsoft.Extensions.Logging;
 
 namespace TicketHub.Controllers
 {
@@ -22,7 +23,7 @@ namespace TicketHub.Controllers
 		}
 
 
-        public IActionResult Index(string sortOrder)
+        public IActionResult Index(string sortOrder, string search)
         {
             var tickets = _context.Ticket.Include(t => t.Event).Include(t => t.Seller).Where(t => t.isListed == true);
 
@@ -48,8 +49,14 @@ namespace TicketHub.Controllers
                     break;
             }
 
+            if (!string.IsNullOrEmpty(search))
+            {
+                tickets = tickets.Where(t => t.Event.Title.Contains(search) || t.Event.Description.Contains(search));
+            }
+
             return View(tickets.ToList());
         }
+
 
         public IActionResult Privacy()
 		{
