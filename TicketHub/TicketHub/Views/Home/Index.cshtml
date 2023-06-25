@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Ticket>
+﻿@model IEnumerable<TicketHub.Models.Ticket>
 
 @{
     ViewData["Title"] = "Index";
@@ -7,7 +7,7 @@
 <h1>Browse events</h1>
 
 <p>
-    <a asp-controller="Tickets" asp-action="Create">Create New</a>
+    <a asp-controller="Tickets" asp-action="Create">Add Ticket</a>
 </p>
 <table class="table">
     <thead>
@@ -49,7 +49,14 @@
                     }
                 </td>
                 <td>
+                    @if (item.Seller !=null)
+                    {
                     @Html.DisplayFor(modelItem => item.Seller.Id)
+                    }
+                    else
+                        {
+                            @:No user assigned
+                        }
                 </td>
 
                 <td>
@@ -72,7 +79,7 @@
                         @Html.DisplayFor(modelItem => item.Price)
                 </td>
                 <td></td>
-                <td><a asp-action="Order" asp-route-id="@item.Id">Order</a></td>
+                <td><a method="post"asp-controller="Home" asp-action="Order" asp-route-id="@item.Id">Order</a></td>
 
             </tr>
         }

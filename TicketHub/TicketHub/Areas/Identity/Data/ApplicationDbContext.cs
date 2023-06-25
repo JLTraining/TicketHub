@@ -45,6 +45,10 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
             .HasIndex(e => new { e.Row, e.Seat })
             .IsUnique();
 
+        modelBuilder.Entity<Ticket>()
+            .Property(e => e.Price)
+            .HasColumnType("decimal(18,2)");
+
     }
 
     public DbSet<TicketHub.Models.ApplicationUser> User { get; set; } = default!;

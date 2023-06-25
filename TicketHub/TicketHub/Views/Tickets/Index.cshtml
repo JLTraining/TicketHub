@@ -38,10 +38,24 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Event.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Seller.Id)
+                    @if (item.Event != null)
+                    {
+                        @Html.DisplayFor(modelItem => item.Event.Title)
+                    }
+                    else
+                    {
+                        @:No event assigned
+                    }
+                </td>
+                <td>
+                    @if (item.Seller != null)
+                    {
+                        @Html.DisplayFor(modelItem => item.Seller.Id)
+                    }
+                    else
+                    {
+                        @:No user assigned
+                    }
             </td>
 
             <td>

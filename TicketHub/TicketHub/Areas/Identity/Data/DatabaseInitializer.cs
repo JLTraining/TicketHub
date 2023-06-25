@@ -59,11 +59,11 @@ namespace TicketHub.Areas.Identity.Data
                             new Event() { Title = "Sea Dance Festival", Date = new DateTime(2023, 8, 16, 18, 30, 0), Description = "Dance to the beats of electronic and pop music on the sandy beaches of Montenegro." },
 });
                     context.SaveChanges();
-                    
+
                     if (!context.Users.Any())
                     {
                         context.Users.AddRange(new List<ApplicationUser>()
-                        {   
+                        {
                                 new ApplicationUser() { FirstName = "Justs", LastName = "Liepins", Alias = "Justes45", Email = "justsliepins@inbox.lv", EmailConfirmed = true, UserName = "Justes45" },
                                 new ApplicationUser() { FirstName = "John", LastName = "Doe", Alias = "JD123", Email = "johndoe@example.com", EmailConfirmed = true, UserName = "JD123" },
                                 new ApplicationUser() { FirstName = "Jane", LastName = "Smith", Alias = "JSmith", Email = "janesmith@example.com", EmailConfirmed = true, UserName = "JSmith" },
@@ -99,116 +99,100 @@ namespace TicketHub.Areas.Identity.Data
                     };
 
                     context.SaveChanges();
-                    
-                }
-                List<Ticket> tickets = new();
-                List<string> RowSeatIndex = new List<string>();
-                List<string> RowSeatIndexInt = new List<string>();
 
-                for (int i = 0; i < 300; i++)
+                }
+                if (!context.Ticket.Any())
                 {
-                    int eventIdIndex = new Random().Next(39, 72);
-                    string sellerId = GetRandomSellerId();
-                    string randomRow = GenerateRandomRow();
-                    string randomRowInt = GenerateRandomRowInt();
-                    string randomSeat = GenerateRandomSeat();
-                    
-                    int IntOrLetter = new Random().Next(1, 3); // Generate a value between 1 and 2 (inclusive)
-                    bool isDuplicate = false;
+                    List<Ticket> tickets = new();
+                    List<string> RowSeatIndex = new List<string>();
+                    List<string> RowSeatIndexInt = new List<string>();
 
-                    if (IntOrLetter == 1)
+                    for (int i = 0; i < 300; i++)
                     {
-                        foreach(string item in RowSeatIndex)
-                        {
-                            if(item == randomRow+randomSeat)
-                            {
-                                isDuplicate = true;
-                                break;
+                       
+                        string sellerId = GetRandomSellerId(context);
+                        string randomRow = GenerateRandomRow();
+                        string randomRowInt = GenerateRandomRowInt();
+                        string randomSeat = GenerateRandomSeat();
 
+                        int IntOrLetter = new Random().Next(1, 3); // Generate a value between 1 and 2 (inclusive)
+                        bool isDuplicate = false;
+
+                        if (IntOrLetter == 1)
+                        {
+                            foreach (string item in RowSeatIndex)
+                            {
+                                if (item == randomRow + randomSeat)
+                                {
+                                    isDuplicate = true;
+                                    break;
+
+                                }
+                            }
+                            if (isDuplicate == false)
+                            {
+                                Ticket ticket = new Ticket()
+                                {
+
+                                    EventId = GetRandomEventId(context),
+                                    SellerId = sellerId,
+                                    Price = GenerateRandomPrice(),
+                                    Quantity = GenerateRandomQuantity(),
+                                    Row = randomRow,
+                                    Seat = randomSeat
+                                };
+
+                                RowSeatIndex.Add(randomRow + randomSeat);
+                                tickets.Add(ticket);
+                            }
+
+                        }
+                        else if (IntOrLetter == 2) // Check if the value is 2
+                        {
+                            foreach (string item in RowSeatIndexInt)
+                            {
+                                if (item == randomRowInt + randomSeat)
+                                {
+                                    isDuplicate = true;
+                                    break;
+                                }
+                            }
+                            if (isDuplicate == false)
+                            {
+                                Ticket ticket = new Ticket()
+                                {
+                                    EventId = GetRandomEventId(context),
+                                    SellerId = sellerId,
+                                    Price = GenerateRandomPrice(),
+                                    Quantity = GenerateRandomQuantity(),
+                                    Row = randomRowInt,
+                                    Seat = randomSeat
+                                };
+                                tickets.Add(ticket);
+                                RowSeatIndexInt.Add(randomRowInt + randomSeat);
                             }
                         }
-                        if (isDuplicate == false)
-                        {
-                            Ticket ticket = new Ticket()
-                            {
-
-                                EventId = eventIdIndex,
-                                SellerId = sellerId,
-                                Price = GenerateRandomPrice(),
-                                Quantity = GenerateRandomQuantity(),
-                                Row = randomRow,
-                                Seat = randomSeat
-                            };
-
-                            RowSeatIndex.Add(randomRow + randomSeat);
-                            tickets.Add(ticket);
-                        }
-                        
+                        if (isDuplicate == true) isDuplicate = false;
                     }
-                    else if (IntOrLetter == 2) // Check if the value is 2
-                    {
-                        foreach (string item in RowSeatIndexInt)
-                        {
-                            if (item == randomRowInt + randomSeat)
-                            {
-                                isDuplicate = true;
-                                break;
-                            }
-                        }
-                        if (isDuplicate == false)
-                        {
-                            Ticket ticket = new Ticket()
-                            {
-                                EventId = eventIdIndex,
-                                SellerId = sellerId,
-                                Price = GenerateRandomPrice(),
-                                Quantity = GenerateRandomQuantity(),
-                                Row = randomRowInt,
-                                Seat = randomSeat
-                            };
-                            tickets.Add(ticket);
-                            RowSeatIndexInt.Add(randomRowInt + randomSeat);
-                        }
-                    }
-                    if (isDuplicate == true) isDuplicate = false; 
+
+                    context.Ticket.AddRange(tickets);
+                    context.SaveChanges();
                 }
 
-                context.Ticket.AddRange(tickets);
-                context.SaveChanges();
             }
         }
 
         /*Some Helper methods*/
-        private static string GetRandomSellerId()
+        private static string GetRandomSellerId(ApplicationDbContext context) 
         {
-            string[] sellerId = new[]
-            {
-                "05a319a5-41f5-4357-ad2b-f703519ed524",
-                "06f5f9dd-aa79-423e-97dd-4d24281628df",
-                "08cbfe3b-8ac2-4b0b-a873-0ff894226ef6",
-                "0ddb54a9-dcfe-4ac7-9ee4-afb2264d1347",
-                "12950afe-3b36-4c47-9ad7-b7a996adc985",
-                "28f8f168-3e14-4b7b-8dc8-0b8847a78dda",
-                "2a3dfc11-1661-46e5-8b29-4784b4d6c8ca",
-                "2f13b2fb-aeae-47d1-8ae3-e0a502488d8f",
-                "3562534e-723e-4a56-848b-7fe037fae515",
-                "46d4d45a-2a46-42f5-a0a2-fdd791dd21e0",
-                "56d6a5d4-457b-409a-a799-8a2ac3613edb",
-                "62b080d4-bb42-4cc9-a822-ee9560b2c689",
-                "64b5e4e9-0e8e-4269-9350-23495bde2b0a",
-                "6fe3fc4e-3f76-45f5-8130-d32951271dcd",
-                "7fc30dbb-bf70-4f38-89a4-b29ba45625d5",
-                "8872e872-907c-417d-9281-efa95a1ba42f",
-                "8d7cee33-828b-4961-beab-f551b6ad1334",
-                "a566f8e7-96eb-47f2-b5d0-967c16c3c34d",
-                "aa414c48-05d8-4c9b-8dd1-10a2486aee4b",
-                "bdfd1bc3-a3c9-4b16-80a9-b930768e8d0b",
-                "c501eb91-a834-43c2-8326-96e2ad5c6df0",
-                "c861ce10-b9b2-4278-9bdd-b6dd35a8efc5",
-                "c9c51519-e645-4abe-9f48-6be877873437",
-                "e6d1a803-50cd-471f-a551-a68f3c13c88a",
-            };
-            return sellerId[new Random().Next(0, sellerId.Length)];
+            var sellerIds = context.User.Select(u => u.Id).ToArray();
+            return sellerIds[new Random().Next(0, sellerIds.Length)];
+        }
+
+        private static int GetRandomEventId(ApplicationDbContext context) 
+        {
+            var eventIds = context.Event.Select(u => u.Id).ToArray();
+            return eventIds[new Random().Next(1, eventIds.Length)];
         }
 
         private static decimal GenerateRandomPrice()

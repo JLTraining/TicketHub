@@ -208,7 +208,6 @@ namespace TicketHub.Migrations
                         .HasColumnName("date");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("description");

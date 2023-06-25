@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TicketHub.Migrations
 {
     /// <inheritdoc />
-    public partial class InitApplicationUser : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +19,7 @@ namespace TicketHub.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                    description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -188,7 +188,9 @@ namespace TicketHub.Migrations
                     EventId = table.Column<int>(type: "int", nullable: false),
                     SellerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    quantity = table.Column<int>(type: "int", nullable: false)
+                    quantity = table.Column<int>(type: "int", nullable: false),
+                    Row = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Seat = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -292,6 +294,13 @@ namespace TicketHub.Migrations
                 name: "IX_Ticket_EventId",
                 table: "Ticket",
                 column: "EventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ticket_Row_Seat",
+                table: "Ticket",
+                columns: new[] { "Row", "Seat" },
+                unique: true,
+                filter: "[Row] IS NOT NULL AND [Seat] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ticket_SellerId",

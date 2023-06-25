@@ -12,8 +12,8 @@ using TicketHub.Areas.Identity.Data;
 namespace TicketHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230622084941_RowSeat4")]
-    partial class RowSeat4
+    [Migration("20230625075505_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -211,7 +211,6 @@ namespace TicketHub.Migrations
                         .HasColumnName("date");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("description");
@@ -380,10 +379,12 @@ namespace TicketHub.Migrations
                         .HasColumnName("quantity");
 
                     b.Property<string>("Row")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Seat")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("SellerId")
                         .IsRequired()

@@ -1,14 +1,13 @@
-﻿using Humanizer;
-using Microsoft.AspNetCore.Mvc;
-using System.Data.Entity;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Security.Claims;
 using TicketHub.Areas.Identity.Data;
 using TicketHub.Models;
 using TicketHub.DataTransferObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System.Net.Sockets;
+using System.Security.Claims;
 
 namespace TicketHub.Controllers
 {
@@ -22,17 +21,14 @@ namespace TicketHub.Controllers
 			_context = context;
 		}
 
-		public IActionResult Index()
+        public IActionResult Index()
         {
+            var tickets = _context.Ticket.Include(t => t.Event).Include(t => t.Seller).ToList();
+            return View(tickets);
+        }
 
 
-            // Lai atlasitu visus ticketus no visiem useriem			
-            var applicationDbContext = _context.Ticket.Include(t => t.Event).Include(t => t.Seller);
-            return View(applicationDbContext.ToList());
-
-		}
-
-		public IActionResult Privacy()
+        public IActionResult Privacy()
 		{
 			return View();
 		}
@@ -46,20 +42,23 @@ namespace TicketHub.Controllers
         //Buy ticket
         // GET: Tickets/Edit/5
         public IActionResult Order(int? id)
-        {
+        
+            {var ticket = _context.Ticket
+                .Include(t => t.Event)
+                .FirstOrDefault(t => t.Id == id);
+
+            
             if (id == null || _context.Ticket == null)
             {
                 return NotFound();
             }
 
-            var ticket = _context.Ticket.Find(id);
+            
             if (ticket == null)
             {
                 return NotFound();
             }
-            ViewData["EventId"] = new SelectList(_context.Event, "Id", "Title", ticket.EventId);
-            ViewData["SellerId"] = new SelectList(_context.User, "Id", "FirstName", ticket.SellerId);
-            return View("~/Views/Tickets/Index.cshtml", ticket);
+            return View(ticket);
         }
 
         // POST: Tickets/Edit/5
@@ -68,14 +67,12 @@ namespace TicketHub.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Order(int id, [Bind("Id,EventId,BuyerId,Price,Quantity, Row, Seat")] OrderTicket orderTicket)
+        public IActionResult Order(int id)
         {
-            if (_context.Ticket == null)
-            {
-                return NotFound();
-            }
-
+            
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var ticket = _context.Ticket.Find(id);
+            
             if (ticket == null)
             {
                 return NotFound();
@@ -84,21 +81,13 @@ namespace TicketHub.Controllers
             if (ModelState.IsValid)
             {
                
-                    ticket.SellerId = orderTicket.BuyerId;
-                    ticket.EventId = orderTicket.EventId;
-                    ticket.Price = orderTicket.Price;
-                    ticket.Quantity = orderTicket.Quantity;
-                    ticket.Row = orderTicket.Row;
-                    ticket.Seat = orderTicket.Seat;
-
-                    _context.Update(ticket);
-                    _context.SaveChanges();
+                ticket.SellerId = userId;
+                _context.Update(ticket);
+                _context.SaveChanges();
                 
-               
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EventId"] = new SelectList(_context.Event, "Id", "Title", ticket.EventId);
-            ViewData["SellerId"] = new SelectList(_context.User, "Id", "FirstName", ticket.SellerId);
             return View(ticket);
         }
 
