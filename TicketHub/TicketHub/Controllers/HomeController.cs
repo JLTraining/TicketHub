@@ -2,29 +2,37 @@
 using System.Diagnostics;
 using TicketHub.Areas.Identity.Data;
 using TicketHub.Models;
-using TicketHub.DataTransferObjects;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Sockets;
 using System.Security.Claims;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Localization;
 
 namespace TicketHub.Controllers
 {
 	public class HomeController : Controller
 	{
         private readonly ApplicationDbContext _context;
-
-		public HomeController( ApplicationDbContext context)
+        private readonly IStringLocalizer<HomeController> _localizer;
+		public HomeController( ApplicationDbContext context, 
+            IStringLocalizer<HomeController> localizer)
 		{
 
 			_context = context;
+            _localizer = localizer;
 		}
 
+        public IActionResult SetCulture(string culture)
+        {
+            // Store the selected culture in the session
+            HttpContext.Session.SetString("lv-LV", culture);
+
+            // Redirect to the previous page or a specific page
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
 
         public IActionResult Index(string sortOrder, string search)
         {
+            var localizedTitle = _localizer["Welcome"];
             var tickets = _context.Ticket.Include(t => t.Event).Include(t => t.Seller).Where(t => t.isListed == true);
 
             ViewData["TitleSortParam"] = sortOrder == "TitleAsc" ? "TitleDesc" : "TitleAsc";
@@ -33,7 +41,7 @@ namespace TicketHub.Controllers
             switch (sortOrder)
             {
                 case "TitleAsc":
-                    tickets = tickets.OrderBy(t => t.Event.Title);
+                    tickets = tickets.OrderBy(keySelector: t => t.Event.Title);
                     break;
                 case "TitleDesc":
                     tickets = tickets.OrderByDescending(t => t.Event.Title);

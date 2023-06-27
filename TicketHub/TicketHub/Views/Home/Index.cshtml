@@ -1,37 +1,58 @@
 ﻿@model IEnumerable<TicketHub.Models.Ticket>
 @using System.Security.Claims
+@using Microsoft.Extensions.Primitives
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
 
 @{
     ViewData["Title"] = "Index";
+    int pageSize = Convert.ToInt32(ViewContext.HttpContext.Request.Query["pageSize"].FirstOrDefault() ?? "20");
+    int totalItems = Model.Count();
+    int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+    int currentPage = Convert.ToInt32(ViewContext.HttpContext.Request.Query["page"].FirstOrDefault() ?? "1");
+    int startItem = (currentPage - 1) * pageSize;
+    int endItem = Math.Min(startItem + pageSize, totalItems);
+    var displayedItems = Model.Skip(startItem).Take(pageSize);
 }
 
-<h1>Browse events</h1>
+
+<h1>@Localizer.GetString("BrowseEvents")</h1>
 
 <p>
-    <a asp-controller="Tickets" asp-action="Create">Add Ticket</a>
+    <a asp-controller="Tickets" asp-action="Create">@Localizer.GetString("AddTicket")</a>
 </p>
 
 @using (Html.BeginForm("Index", "Home", FormMethod.Get))
 {
-    <div class="form-group">
-        <label for="sortOrder">Sort By:</label>
-        <select id="sortOrder" name="sortOrder" class="form-control">
-            <option value="TitleAsc">Event Title (A-Z)</option>
-            <option value="TitleDesc">Event Title (Z-A)</option>
-            <option value="PriceAsc">Price (Low to High)</option>
-            <option value="PriceDesc">Price (High to Low)</option>
+      <div class="form-group">
+        <label for="pageSize">@Localizer.GetString("ItemsPerPage"):</label>
+        <select id="pageSize" name="pageSize" class="form-control">
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
         </select>
-        <button type="submit" class="btn btn-primary">Sort</button>
+        <button type="submit" class="btn btn-primary">@Localizer.GetString("Set")</button>
+    </div>
+    <div class="form-group">
+        <label for="sortOrder">@Localizer.GetString("SortBy"):</label>
+        <select id="sortOrder" name="sortOrder" class="form-control">
+            <option value="TitleAsc">@Localizer.GetString("EventTitleAZ")</option>
+            <option value="TitleDesc">@Localizer.GetString("EventTitleZA")</option>
+            <option value="PriceAsc">@Localizer.GetString("PriceLTH")</option>
+            <option value="PriceDesc">@Localizer.GetString("PriceHTL")</option>
+        </select>
+        <button type="submit" class="btn btn-primary">@Localizer.GetString("Sort")</button>
     </div>
      <div class="col-md-6">
         <!--search bar -->
-        <label for="search">Search:</label>
+        <label for="search">@Localizer.GetString("Search:")</label>
         <input type="text" id="search" name="search">
         <!-- Search button -->
-        <button type="submit">Search</button>
+        <button type="submit">@Localizer.GetString("Search")</button>
     </div>
 }
-<h2>My Listings</h2>
+<h2>@Localizer.GetString("MyListings")</h2>
 <table class="table">
     <thead>
         <tr>
@@ -101,14 +122,14 @@
                         @Html.DisplayFor(modelItem => item.Price)
                     </td>
                     <td>
-                        <a method="post" asp-controller="Home" asp-action="RemoveFromList" asp-route-id="@item.Id">Remove from listing</a>
+                        <a method="post" asp-controller="Home" asp-action="RemoveFromList" asp-route-id="@item.Id">@Localizer.GetString("RemoveFromListing")</a>
                     </td>
                 </tr>
             }
         }
     </tbody>
 </table>
-<h2>All Tickets</h2>
+<h2>@Localizer.GetString("AllTickets")</h2>
 <table class="table">
     <thead>
         <tr>
@@ -153,7 +174,7 @@
                 <td>
                     @if (item.Seller !=null)
                     {
-                    @Html.DisplayFor(modelItem => item.Seller.Id)
+                    @Html.DisplayFor(modelItem => item.Seller.Alias)
                     }
                     else
                         {
@@ -184,11 +205,11 @@
                 @{
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if(userId == @item.SellerId){
-                     <td><a method="post"asp-controller="Home" asp-action="RemoveFromList" asp-route-id="@item.Id">Remove from listing</a></td>
+                            <td><a method="post" asp-controller="Home" asp-action="RemoveFromList" asp-route-id="@item.Id">@Localizer.GetString("RemoveFromListing")</a></td>
                 }
                 else if(userId!= @item.SellerId)
                 {
-                     <td><a method="post"asp-controller="Home" asp-action="Order" asp-route-id="@item.Id">Order</a></td>
+                            <td><a method="post" asp-controller="Home" asp-action="Order" asp-route-id="@item.Id">@Localizer.GetString("Order")</a></td>
                 }
                 }
             </tr>
@@ -196,3 +217,34 @@
         }
     </tbody>
 </table>
+<div class="pagination">
+    @if (totalPages > 1)
+    {
+        <ul class="pagination">
+            @if (currentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="?page=1&pageSize=@pageSize">@Localizer.GetString("First")</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page=@(currentPage - 1)&pageSize=@pageSize">@Localizer.GetString("Previous")</a>
+                </li>
+            }
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == currentPage ? "active" : "")">
+                    <a class="page-link" href="?page=@i&pageSize=@pageSize">@i</a>
+                </li>
+            }
+            @if (currentPage < totalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="?page=@(currentPage + 1)&pageSize=@pageSize">@Localizer.GetString("Next")</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page=@totalPages&pageSize=@pageSize">@Localizer.GetString("Last")</a>
+                </li>
+            }
+        </ul>
+    }
+</div>

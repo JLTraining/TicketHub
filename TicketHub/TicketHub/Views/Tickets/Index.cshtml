@@ -81,7 +81,7 @@
                  <td>
                 @Html.DisplayFor(modelItem => item.isListed)
             </td>
-            </td>
+            
             <td></td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
@@ -98,7 +98,7 @@
                <td><a method="post" asp-controller="Tickets" asp-action="List" asp-route-id="@item.Id">Remove from Listing</a></td>
                 }
 
-            </td>
+            
         </tr>
 }
     </tbody>

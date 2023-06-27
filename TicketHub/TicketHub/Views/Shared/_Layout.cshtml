@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -31,7 +34,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Tickets" asp-action="Index">My Tickets</a>
                         </li>
+
                     </ul>
+                </div><div>
+                    @Localizer.GetString("ChangeLanguage"):
+                    <a href="/Home/SetCulture?culture=en-US">EN</a>
+                    <a href="/Home/SetCulture?culture=lv-LV">LV</a>
                 </div>
                 <partial name="_LoginPartial" />
             </div>
