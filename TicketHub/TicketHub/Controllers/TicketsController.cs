@@ -9,6 +9,7 @@ using TicketHub.Models;
 
 namespace TicketHub.Controllers
 {
+    
     [Authorize]
     public class TicketsController : Controller
     {
