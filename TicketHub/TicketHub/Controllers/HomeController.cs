@@ -118,11 +118,31 @@ namespace TicketHub.Controllers
 
             if (ModelState.IsValid)
             {
+                var salesHistory = new SaleHistory
+                {
+                    UserId = ticket.SellerId,
+                    TicketId = ticket.Id,
+                    Date = DateTime.Now,
+                    Price = ticket.Price
+                };
+                _context.SaleHistory.Add(salesHistory);
+                _context.SaveChanges();
+
                 ticket.SellerId = userId;
                 ticket.isListed = false;
                 _context.Update(ticket);
                 _context.SaveChanges();
-                
+
+                var purchaseHistory = new PurchaseHistory
+                {
+                    UserId = userId,
+                    TicketId = ticket.Id,
+                    Date = DateTime.Now,
+                    Price = ticket.Price
+                };
+
+                _context.PurchaseHistory.Add(purchaseHistory);
+                _context.SaveChanges();
 
                 return RedirectToAction(nameof(Index));
             }

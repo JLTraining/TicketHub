@@ -17,7 +17,18 @@ namespace TicketHub.Areas.Identity.Data
 
                 // Ensure the database is created
                 context.Database.EnsureCreated();
-
+                if (!context.Roles.Any())
+                {
+                    context.Roles.AddRange(new List<IdentityRole>()
+                {
+                 new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" },
+                 new IdentityRole { Name = "Store-Manager", NormalizedName = "STORE-MANAGER" },
+                 new IdentityRole { Name = "Member", NormalizedName = "MEMBER" }
+});
+                context.SaveChanges();
+                }
+               
+                
                 // Users
                 if (!context.Event.Any())
                 {
@@ -101,6 +112,7 @@ namespace TicketHub.Areas.Identity.Data
                     context.SaveChanges();
 
                 }
+                
                 if (!context.Ticket.Any())
                 {
                     List<Ticket> tickets = new();
@@ -224,6 +236,6 @@ namespace TicketHub.Areas.Identity.Data
         {
             return new Random().Next(1, 60).ToString();
         }
-
+        
     }
 }
