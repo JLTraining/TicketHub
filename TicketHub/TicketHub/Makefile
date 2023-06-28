@@ -15,3 +15,7 @@ build:
 ps:
 	$(DOCKER_COMPOSE) ps
 .PHONY: ps
+
+migrate:
+	dotnet ef migrations add
+.PHONY: migrate

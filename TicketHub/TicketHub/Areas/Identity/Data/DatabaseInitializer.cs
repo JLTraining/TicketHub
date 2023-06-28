@@ -119,7 +119,7 @@ namespace TicketHub.Areas.Identity.Data
                     List<string> RowSeatIndex = new List<string>();
                     List<string> RowSeatIndexInt = new List<string>();
 
-                    for (int i = 0; i < 300; i++)
+                    for (int i = 0; i < 30; i++)
                     {
                        
                         string sellerId = GetRandomSellerId(context);
