@@ -22,8 +22,7 @@ namespace TicketHub.Areas.Identity.Data
                     context.Roles.AddRange(new List<IdentityRole>()
                 {
                  new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" },
-                 new IdentityRole { Name = "Store-Manager", NormalizedName = "STORE-MANAGER" },
-                 new IdentityRole { Name = "Member", NormalizedName = "MEMBER" }
+                 new IdentityRole { Name = "User", NormalizedName = "USER" }
 });
                 context.SaveChanges();
                 }
