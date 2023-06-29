@@ -117,85 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddTicket" xml:space="preserve">
-    <value>Add Ticket</value>
+  <data name="CreateAcc" xml:space="preserve">
+    <value>Create a new account.</value>
   </data>
-  <data name="AllTickets" xml:space="preserve">
-    <value>All Tickets</value>
+  <data name="desc1" xml:space="preserve">
+    <value>There are no external authentication services configured. See this</value>
   </data>
-  <data name="BrowseEvents" xml:space="preserve">
-    <value>Browse Events</value>
+  <data name="desc2" xml:space="preserve">
+    <value>article
+ about setting up this ASP.NET application to support logging in via external services</value>
   </data>
-  <data name="Event" xml:space="preserve">
-    <value>Event</value>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
   </data>
-  <data name="EventTitleAZ" xml:space="preserve">
-    <value>Event Title (A-Z)</value>
-  </data>
-  <data name="EventTitleZA" xml:space="preserve">
-    <value>Event Title (Z-A)</value>
-  </data>
-  <data name="First" xml:space="preserve">
-    <value>First</value>
-  </data>
-  <data name="ItemsPerPage" xml:space="preserve">
-    <value>Items per Page</value>
-  </data>
-  <data name="Last" xml:space="preserve">
-    <value>Last</value>
-  </data>
-  <data name="MyListings" xml:space="preserve">
-    <value>My Listings</value>
-  </data>
-  <data name="Next" xml:space="preserve">
-    <value>Next</value>
-  </data>
-  <data name="Order" xml:space="preserve">
-    <value>Order</value>
-  </data>
-  <data name="Previous" xml:space="preserve">
-    <value>Previous</value>
-  </data>
-  <data name="Price" xml:space="preserve">
-    <value>Price</value>
-  </data>
-  <data name="PriceHTL" xml:space="preserve">
-    <value>Price (High to Low)</value>
-  </data>
-  <data name="PriceLTH" xml:space="preserve">
-    <value>Price (Low to High)</value>
-  </data>
-  <data name="Quantity" xml:space="preserve">
-    <value>Quantity</value>
-  </data>
-  <data name="RemoveFromListing" xml:space="preserve">
-    <value>Remove from listing</value>
-  </data>
-  <data name="Row" xml:space="preserve">
-    <value>Row</value>
-  </data>
-  <data name="Search" xml:space="preserve">
-    <value>Search</value>
-  </data>
-  <data name="Search:" xml:space="preserve">
-    <value>Search:</value>
-  </data>
-  <data name="Seat" xml:space="preserve">
-    <value>Seat</value>
-  </data>
-  <data name="SellerID" xml:space="preserve">
-    <value>Seller ID</value>
-  </data>
-  <data name="Set" xml:space="preserve">
-    <value>Set</value>
-  </data>
-  <data name="Sort" xml:space="preserve">
-    <value>Sort</value>
-  </data>
-  <data name="SortBy" xml:space="preserve">
-    <value>Sort By</value>
-  </data>
-  <data name="Welcome" xml:space="preserve">
-    <value>Welcome to our site</value>
+  <data name="RegisterAnother" xml:space="preserve">
+    <value>Use another service to register</value>
   </data>
 </root>

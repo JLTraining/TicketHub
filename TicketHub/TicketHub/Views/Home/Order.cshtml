@@ -1,12 +1,15 @@
 ﻿@model TicketHub.Models.Ticket
-
+@using System.Security.Claims
+@using Microsoft.Extensions.Primitives
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
     ViewData["Title"] = "Order";
 }
 
-<h3>Order Confirmation</h3>
-<p>Are you sure you want to confirm your purchase of @Model.Event.Title on @Model.Event.Date? The payment amount is @Model.Price.</p>
+<h3>@Localizer.GetString("OrderMsg")</h3>
+<p>@Localizer.GetString("Msg1") @Model.Event.Title on @Model.Event.Date? @Localizer.GetString("Msg3") @Model.Price.</p>
 <form method="post" asp-controller="Home" asp-action="Order" asp-route-id="@Model.Id">
     @* Form fields and submit button *@
-    <button type="submit">Confirm Purchase</button>
+    <button type="submit">@Localizer.GetString("Confirm")</button>
 </form>

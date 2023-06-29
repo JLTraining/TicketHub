@@ -124,7 +124,10 @@
     <value>Visas biļetes</value>
   </data>
   <data name="BrowseEvents" xml:space="preserve">
-    <value>Pārlūkot notikumus2</value>
+    <value>Pārlūkot notikumus</value>
+  </data>
+  <data name="Event" xml:space="preserve">
+    <value>Pasākums</value>
   </data>
   <data name="EventTitleAZ" xml:space="preserve">
     <value>Pasākuma nosaukums (no A līdz Z)</value>
@@ -153,20 +156,35 @@
   <data name="Previous" xml:space="preserve">
     <value>Iepriekšējais</value>
   </data>
+  <data name="Price" xml:space="preserve">
+    <value>Cena</value>
+  </data>
   <data name="PriceHTL" xml:space="preserve">
     <value>Cena (no augstākās līdz zemākajai)</value>
   </data>
   <data name="PriceLTH" xml:space="preserve">
     <value>Cena (no zemākās līdz augstākajai)</value>
   </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Daudzums</value>
+  </data>
   <data name="RemoveFromListing" xml:space="preserve">
     <value>Noņemt no saraksta</value>
+  </data>
+  <data name="Row" xml:space="preserve">
+    <value>Rinda</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Meklēt</value>
   </data>
   <data name="Search:" xml:space="preserve">
     <value>Meklēt:</value>
+  </data>
+  <data name="Seat" xml:space="preserve">
+    <value>Vieta</value>
+  </data>
+  <data name="SellerID" xml:space="preserve">
+    <value>Pārdevēja ID</value>
   </data>
   <data name="Set" xml:space="preserve">
     <value>Uzstādīt</value>
