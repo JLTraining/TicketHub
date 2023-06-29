@@ -1,4 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using System.Security.Claims
+@using Microsoft.Extensions.Primitives
+@using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
 
 <!DOCTYPE html>
@@ -23,22 +26,22 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">@Localizer.GetString("Home")</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">@Localizer.GetString("Privacy")</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Events" asp-action="Index">Add Event</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Events" asp-action="Index">@Localizer.GetString("AddEvent")</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Tickets" asp-action="Index">My Tickets</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Tickets" asp-action="Index">@Localizer.GetString("MyTickets")</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="PurchaseHistories" asp-action="Index">Purchase History</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="PurchaseHistories" asp-action="Index">@Localizer.GetString("PurchaseHistory")</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="SaleHistories" asp-action="Index">Sales History</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="SaleHistories" asp-action="Index">@Localizer.GetString("SalesHistory")</a>
                         </li>
                     </ul>
                 </div><div>
@@ -58,7 +61,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - TicketHub - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2023 - TicketHub - <a asp-area="" asp-controller="Home" asp-action="Privacy">@Localizer.GetString("Privacy")</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
